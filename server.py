@@ -17,11 +17,9 @@ spec.loader.exec_module(module)
 mcp = module.mcp
 
 # Middleware stack (outermost to innermost): Auth → RateLimit → AuditLog → FastMCP
-from middleware.auth import BearerAuthMiddleware
 from middleware.rate_limiter import RateLimiterMiddleware
 from middleware.audit_logger import AuditLoggerMiddleware
 
 app = mcp.streamable_http_app()
 app = AuditLoggerMiddleware(app)
 app = RateLimiterMiddleware(app, rate=5.0, burst=30)
-app = BearerAuthMiddleware(app)
